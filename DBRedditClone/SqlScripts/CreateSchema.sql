@@ -16,6 +16,7 @@ BEGIN
     CREATE TABLE IF NOT EXISTS RoleAssignments (
         UserId UUID NOT NULL,
         RoleId UUID NOT NULL,
+        PRIMARY KEY (UserId, RoleId),
         FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
         FOREIGN KEY (RoleId) REFERENCES Roles(RoleId) ON DELETE CASCADE
     );
