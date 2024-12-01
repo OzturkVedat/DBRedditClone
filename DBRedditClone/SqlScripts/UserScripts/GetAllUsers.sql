@@ -1,0 +1,8 @@
+﻿CREATE OR REPLACE FUNCTION GetAllUsers()
+RETURNS TABLE(UserID UUID, UserName VARCHAR, Email VARCHAR, Karma INT) AS $$
+BEGIN
+	RETURN QUERY
+	SELECT UserID, UserName, Email, Karma
+	FROM Users;
+END;
+$$ LANGUAGE plpgsql;
