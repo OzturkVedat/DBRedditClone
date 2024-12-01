@@ -8,11 +8,11 @@ namespace DBRedditClone.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly PostgresService _postgresService;      // a simple service with user table CRUDs
+        private readonly UsersService _usersService;      // a simple service with user table CRUDs
 
-        public UsersController(PostgresService postgresService)
+        public UsersController(UsersService usersService)
         {
-            _postgresService = postgresService;
+            _usersService = usersService;
         }
 
         [HttpGet("user-details/{id}")]
@@ -21,7 +21,7 @@ namespace DBRedditClone.Controllers
             if (!Guid.TryParse(id, out Guid userId))
                 return BadRequest("Invalid GUID format.");
             
-            var result = await _postgresService.GetUserById(userId);
+            var result = await _usersService.GetUserById(userId);
             if (result is SuccessDataResult<UserModel> successResult)         
                 return Ok(successResult.Data);        
             return BadRequest(result.Message);
@@ -30,7 +30,7 @@ namespace DBRedditClone.Controllers
         [HttpGet("all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var result = await _postgresService.GetAllUsers();
+            var result = await _usersService.GetAllUsers();
             if (result is SuccessDataResult<List<UserPublicDto>> successResult)
                 return Ok(successResult.Data);      
             return BadRequest(result.Message);
@@ -39,7 +39,7 @@ namespace DBRedditClone.Controllers
         [HttpPost("register-user")]
         public async Task<IActionResult> CreateUser([FromBody] UserRegisterDto newUser)
         {
-            var result = await _postgresService.CreateUser(newUser);
+            var result = await _usersService.CreateUser(newUser);
             if (result is SuccessResult)
                 return Ok(result.Message);
             
@@ -49,7 +49,7 @@ namespace DBRedditClone.Controllers
         [HttpPatch("update-user")]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto dto)
         {
-            var result = await _postgresService.UpdateUser(dto);
+            var result = await _usersService.UpdateUser(dto);
             if (result is SuccessResult)          
                 return Ok(result.Message);     
             return BadRequest(result.Message);
@@ -61,7 +61,7 @@ namespace DBRedditClone.Controllers
             if (!Guid.TryParse(id, out Guid userId))
                 return BadRequest("Invalid GUID format.");
 
-            var result = await _postgresService.DeleteUser(userId);
+            var result = await _usersService.DeleteUser(userId);
             if (result is SuccessResult)
                 return Ok(result.Message);
             

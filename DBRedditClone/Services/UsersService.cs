@@ -5,11 +5,11 @@ using System.Security.Cryptography;
 
 namespace DBRedditClone.Services
 {
-    public class PostgresService
+    public class UsersService
     {
         private readonly string _connectionString;
-        private readonly ILogger<PostgresService> _logger;
-        public PostgresService(string connectionString, ILogger<PostgresService> logger)
+        private readonly ILogger<UsersService> _logger;
+        public UsersService(string connectionString, ILogger<UsersService> logger)
         {
             _connectionString = connectionString;
             _logger = logger;

@@ -9,8 +9,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddSingleton<SqlScriptExecutor>(provider =>
 new SqlScriptExecutor(connectionString));
 
-builder.Services.AddSingleton<PostgresService>(sp =>
-    new PostgresService(connectionString, sp.GetRequiredService<ILogger<PostgresService>>()));
+builder.Services.AddSingleton<UsersService>(sp =>
+    new UsersService(connectionString, sp.GetRequiredService<ILogger<UsersService>>()));
+
+builder.Services.AddSingleton<SubredditsService>(sp =>
+    new SubredditsService(connectionString, sp.GetRequiredService<ILogger<SubredditsService>>()));
+
+builder.Services.AddSingleton<PostsService>(sp =>
+    new PostsService(connectionString, sp.GetRequiredService<ILogger<PostsService>>()));
+
+builder.Services.AddSingleton<CommentsService>(sp =>
+    new CommentsService(connectionString, sp.GetRequiredService<ILogger<CommentsService>>()));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,35 +27,60 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-var scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "SqlScripts", "CreateSchema.sql");
+var baseScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "SqlScripts");
 
 using (var scope = app.Services.CreateScope())
 {
     var sqlScriptExecutor = scope.ServiceProvider.GetRequiredService<SqlScriptExecutor>();
+
     try
     {
-        await sqlScriptExecutor.ExecuteSqlScriptAsync(scriptPath);
-        Console.WriteLine("Db schema created successfully.");
+        var schemaScriptPath = Path.Combine(baseScriptPath, "CreateSchema.sql");
+        await ExecuteScriptWithLogging(sqlScriptExecutor, schemaScriptPath);
+        await ExecuteScriptsInDirectory(sqlScriptExecutor, Path.Combine(baseScriptPath, "Triggers"));
 
-        var triggerFiles = Directory.GetFiles("SqlScripts/Triggers", "*.sql");
-        foreach (var triggerFile in triggerFiles)
+        var procedureDirectories = new[] { "UserScripts", "SubredditScripts", "CommentScripts", "PostScripts" };
+        foreach (var dir in procedureDirectories)
         {
-            await sqlScriptExecutor.ExecuteSqlScriptAsync(triggerFile);
+            await ExecuteScriptsInDirectory(sqlScriptExecutor, Path.Combine(baseScriptPath, dir));
         }
-        Console.WriteLine("Triggers are set successfully.");
-
-        var procedureFiles = Directory.GetFiles("SqlScripts/UserScripts", "*.sql");
-        foreach (var procFile in procedureFiles)
-        {
-            await sqlScriptExecutor.ExecuteSqlScriptAsync(procFile);
-        }
-        Console.WriteLine("Stored procedures are seeded and ready.");
+        Console.WriteLine("All scripts executed successfully.");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Error executing SQL script: {ex.Message}");
+        Console.WriteLine($"Error executing SQL scripts: {ex.Message}");
     }
 }
+
+async Task ExecuteScriptsInDirectory(SqlScriptExecutor sqlScriptExecutor, string directoryPath)
+{
+    if (Directory.Exists(directoryPath))
+    {
+        var scriptFiles = Directory.GetFiles(directoryPath, "*.sql");
+        foreach (var scriptFile in scriptFiles)
+        {
+            await ExecuteScriptWithLogging(sqlScriptExecutor, scriptFile);
+        }
+    }
+    else 
+        Console.WriteLine($"Directory not found: {directoryPath}");   
+}
+async Task ExecuteScriptWithLogging(SqlScriptExecutor sqlScriptExecutor, string scriptFilePath)
+{
+    try
+    {
+        Console.WriteLine($"Executing script: {scriptFilePath}");
+        await sqlScriptExecutor.ExecuteSqlScriptAsync(scriptFilePath);
+        Console.WriteLine($"Successfully executed script: {scriptFilePath}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error executing script: {scriptFilePath}");
+        Console.WriteLine($"Detailed error: {ex.Message}");
+        throw;
+    }
+}
+
 
 if (app.Environment.IsDevelopment())
 {

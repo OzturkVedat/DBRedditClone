@@ -46,7 +46,6 @@ BEGIN
 
         Title VARCHAR(100) NOT NULL,
         Content TEXT,
-        CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         VoteScore INT NOT NULL DEFAULT 0,
 
         FOREIGN KEY (SubredditId, UserId) REFERENCES UserSubs(SubredditId, UserId) ON DELETE NO ACTION
@@ -81,15 +80,13 @@ BEGIN
         CommentId UUID PRIMARY KEY,
         PostId UUID NOT NULL,
         UserId UUID NOT NULL,
-        ParentId UUID NULL,
 
         Content TEXT NOT NULL,
         CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         VoteScore INT NOT NULL DEFAULT 0,
 
         FOREIGN KEY (PostId) REFERENCES Posts(PostId) ON DELETE CASCADE,
-        FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
-        FOREIGN KEY (ParentId) REFERENCES Comments(CommentId) ON DELETE SET NULL
+        FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS CommentReactions (
