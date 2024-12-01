@@ -1,16 +1,12 @@
 ﻿CREATE OR REPLACE FUNCTION UpdateUser(
-	_UserId UUID,
-	_UserName VARCHAR,
-	_Email VARCHAR,
-	_PasswordHash TEXT,
-	_Karma INT
+    _UserId UUID,
+    _UserName VARCHAR,
+    _PasswordHash TEXT
 ) RETURNS void AS $$
 BEGIN
-	UPDATE Users
-	SET UserName= _UserName,
-		Email= _Email,
-		PasswordHash= _PasswordHash,
-		Karma= _Karma
-	WHERE UserId = _UserId;
+    UPDATE Users
+    SET UserName = _UserName,
+        PasswordHash = _PasswordHash
+    WHERE UserId = _UserId;
 END;
 $$ LANGUAGE plpgsql;

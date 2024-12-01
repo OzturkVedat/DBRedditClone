@@ -9,6 +9,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddSingleton<SqlScriptExecutor>(provider =>
 new SqlScriptExecutor(connectionString));
 
+builder.Services.AddSingleton<PostgresService>(sp =>
+    new PostgresService(connectionString, sp.GetRequiredService<ILogger<PostgresService>>()));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

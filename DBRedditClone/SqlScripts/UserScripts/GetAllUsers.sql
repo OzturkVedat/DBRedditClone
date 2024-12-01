@@ -1,8 +1,9 @@
 ﻿CREATE OR REPLACE FUNCTION GetAllUsers()
-RETURNS TABLE(UserID UUID, UserName VARCHAR, Email VARCHAR, Karma INT) AS $$
+RETURNS TABLE(UserId UUID, UserName VARCHAR, Karma INT) AS $$
 BEGIN
 	RETURN QUERY
-	SELECT UserID, UserName, Email, Karma
-	FROM Users;
+	SELECT u.UserId, u.UserName, u.Karma
+	FROM Users u
+	ORDER BY u.Karma;
 END;
 $$ LANGUAGE plpgsql;
