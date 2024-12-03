@@ -47,6 +47,9 @@ A basic Reddit clone back-end showcasing CRUD operations, raw SQL integration, a
    ```
 4. Access Swagger UI 
    Navigate to https://localhost:7245/swagger/index.html to test the API endpoint.
+   
+---
+Here is the Crow's Foot style diagram of the current database set up:
 
 ![CrowsFoot](./assets/crows-foot.png)   
    
