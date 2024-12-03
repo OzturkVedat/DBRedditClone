@@ -33,19 +33,25 @@ A basic Reddit clone back-end showcasing CRUD operations, raw SQL integration, a
 ## Installation
 
 1. **Clone the Repository**
+   
    ```bash
    git clone https://github.com/OzturkVedat/DBRedditClone.git
    cd DBRedditClone
    ```
-2. **Set up a Database**
+3. **Set up a Database**
+   
     Create a new database for project. Modify the project's connection string within appsettings.json for local development.
-3. **Run the application**
+   
+5. **Run the application**
+   
    Install dependencies and run the app with CLI (or just run it from Visual Studio):
    ```bash
    dotnet restore
    dotnet run
    ```
-4. Access Swagger UI 
+   
+7. Access Swagger UI
+   
    Navigate to https://localhost:7245/swagger/index.html to test the API endpoint.
    
 ---
