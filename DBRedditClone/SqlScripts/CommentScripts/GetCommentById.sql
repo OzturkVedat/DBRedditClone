@@ -10,8 +10,8 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT CommentId, PostId, UserId, Content, VoteScore
-    FROM Comments
-    WHERE CommentId = _CommentId;
+    SELECT c.CommentId, c.PostId, c.UserId, c.Content, c.VoteScore
+    FROM Comments c
+    WHERE c.CommentId = _CommentId;
 END;
 $$ LANGUAGE plpgsql;

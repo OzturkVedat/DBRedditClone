@@ -40,10 +40,17 @@ namespace DBRedditClone.Controllers
         [HttpPost("post-comment")]
         public async Task<IActionResult> PostComment(AddCommmentDto dto)
         {
-            var comment = new CommentModel
+            if (!Guid.TryParse(dto.PostId, out Guid postGuid))
+                return BadRequest("Invalid GUID format.");
+
+            if (!Guid.TryParse(dto.UserId, out Guid userGuid))
+                return BadRequest("Invalid GUID format.");
+
+            var comment = new CommentEntity
             {
-                PostId = dto.PostId,
-                UserId = dto.UserId,
+                CommentId=Guid.NewGuid(),
+                PostId = postGuid,
+                UserId = userGuid,
                 Content = dto.Content,
                 VoteScore = 0
             };

@@ -8,6 +8,9 @@ RETURNS TABLE (
     VoteScore INT
 ) AS $$
 BEGIN
-    RETURN QUERY SELECT * FROM Posts;
+    RETURN QUERY
+    SELECT p.PostId, p.SubredditId, p.UserId, p.Title, p.Content, p.VoteScore
+    FROM Posts p
+    ORDER BY p.Title;
 END;
 $$ LANGUAGE plpgsql;

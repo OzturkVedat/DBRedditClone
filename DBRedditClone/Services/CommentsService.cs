@@ -87,7 +87,7 @@ namespace DBRedditClone.Services
         }
 
 
-        public async Task<ResultModel> CreateComment(CommentModel comment)
+        public async Task<ResultModel> CreateComment(CommentEntity comment)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace DBRedditClone.Services
                     using (var command = new NpgsqlCommand(
                         "SELECT InsertComment(@CommentId, @PostId, @UserId, @Content, @VoteScore);", connection))
                     {
-                        command.Parameters.AddWithValue("@CommentId", Guid.NewGuid());
+                        command.Parameters.AddWithValue("@CommentId", comment.CommentId);
                         command.Parameters.AddWithValue("@PostId", comment.PostId);
                         command.Parameters.AddWithValue("@UserId", comment.UserId);
                         command.Parameters.AddWithValue("@Content", comment.Content);

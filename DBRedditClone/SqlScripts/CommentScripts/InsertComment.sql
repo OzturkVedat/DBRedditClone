@@ -2,11 +2,11 @@
     _CommentId UUID,
     _PostId UUID,
     _UserId UUID,
-    _ParentId UUID,
-    _Content TEXT
+    _Content TEXT,
+    _VoteScore INT
 ) RETURNS void AS $$
 BEGIN
-    INSERT INTO Comments (CommentId, PostId, UserId, ParentId, Content)
-    VALUES (_CommentId, _PostId, _UserId, _ParentId, _Content);
+    INSERT INTO Comments (CommentId, PostId, UserId, Content, VoteScore)
+    VALUES (_CommentId, _PostId, _UserId, _Content, _VoteScore);
 END;
 $$ LANGUAGE plpgsql;

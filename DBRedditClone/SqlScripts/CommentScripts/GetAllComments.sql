@@ -7,6 +7,9 @@ RETURNS TABLE (
     VoteScore INT
 ) AS $$
 BEGIN
-    RETURN QUERY SELECT * FROM Comments;
+    RETURN QUERY
+    SELECT C.CommentId, c.PostId, c.UserId, c.Content, c.VoteScore
+    FROM Comments c
+    ORDER BY UserId;
 END;
 $$ LANGUAGE plpgsql;
